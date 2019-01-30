@@ -72,31 +72,32 @@ Segmentation seeks to identify groups with similar behavior.  As our task was to
 To understand how much gas each meter used, we calculated each meter’s average use from 2017 to 2018.  Looking at the distribution of consumption, we defined 4 thresholds, creating 5 clusters where the meters in each group all have similar average daily use (see Figures 2,3):
 
 ![Figure 2](/assets/App1.png)
-*Five sections are defined based on Magnitude of average daily gas consumption*  
+*Figure 2. Five sections are defined based on Magnitude of average daily gas consumption*  
 
 We expect residential and small commercial accounts to have relatively small daily usage, and only large commercial and industrial accounts to have high use. As 88% of our population are residential customers, it makes sense that we have a large population of customers who fall into minimal and low usage clusters.  
 
 ![Figure 3](/assets/Fig3.png)
-*% of Population of Five clusters defined based on Magnitude of average daily gas consumption*  
+*Figure 3. % of Population of Five clusters defined based on Magnitude of average daily gas consumption*  
 
 In order to understand how use responds to weather, we had a hypothesis that as temperatures decrease, gas use should increase when it is used as a source of heating.  Therefore, we looked at use from September 2017 to February 2018 as these months should exhibit temperature variation and also contain the coldest temperatures of the year.  We then examined temperature vs average gas use for each date and meter.  This allowed us to identify whether and how each meter’s use changes in response to the temperature.  
 
 The goal of clustering is to identify groups of meters that have similar behavior which we interpreted as similar weather responses.  We used an algorithm called k-shape that identifies similarities between time-series data, allowing us to identify groups with similar behavior.  Using k-shape, we identified 2 clusters (see Figures 4, 5) based on whether their gas consumption is responsive to temperate and cold temperatures or not.  The weather-responsive cluster demonstrates gas consumption with a directly inverse relationship to temperature.  Clusters that do not directly respond to weather (‘non-responders’) may ignore large temperature swings, demonstrate high use that is not related to weather, or behave non-intuitively. 
 
 ![Figure 4](/assets/Fig4.png)  
-*Weather responsive cluster*  
+*Figure 4. Weather responsive cluster*  
 
 ![Figure 5](/assets/Fig5.png)  
-*Non-responsive cluster*  
+*Figure 5. Non-responsive cluster*  
 
 The majority (84%) of the meters in our data are responders (see Figure 6).  As with the magnitude of use analysis, this makes sense as most of our meters belong to residential accounts, which primarily use natural gas for heating.  When gas is used for heating, we would expect to see use increase as temperatures decrease.
 
 ![Figure 6](/assets/Fig6.png)  
-*Percentage of Population of two clusters defined by responsiveness to temperature*  
+*Figure 6. Percentage of Population of two clusters defined by responsiveness to temperature*  
 
 Combining magnitude of use and response to temperature analyses, we identified 10 clusters (5 use, 2 response).  However, no accounts exist in the low use non-responder category, leaving us with 9 clusters, of which the largest cluster has low average use (1.5-3.5 CCF per day) and responds to weather. 
 
-![Figure 7](/assets/Fig7.png)
+![Figure 7](/assets/Fig7.png)  
+*Figure 7. 9 clusters based on magnitude of use and response to temperature*  
    </div>
 </details> 
 
@@ -105,19 +106,23 @@ Combining magnitude of use and response to temperature analyses, we identified 1
    <div markdown="1">
 Within residential customers, 17% are non-responders with minimal usage (see circle in Figure 8 below), and all have a heating rate code, which indicates potential of misclassification and would require further investigation. 
 
-![Figure 8](/assets/Fig8.png)
+![Figure 8](/assets/Fig8.png)  
+*Figure 8. Residential customers*  
 
 Most commercial accounts are responsive to weather; the exceptions are primarily commercial ‘transport’ accounts for whom PECO merely provides transportation for natural gas.  The accounts generally have huge consumption, and likely do not use natural gas for heating, perhaps instead using for industrial purposes.
 
-![Figure 9](/assets/Fig9.png)
+![Figure 9](/assets/Fig9.png)  
+*Figure 9. Commercial customers*  
 
 For accounts with both a gas and an electric meter, we identified some potential misclassification as 14% of the accounts that have both a gas and electric meter use minimal amounts of gas and do not respond to weather are billed using the electric non-heat rate code. We believe these accounts do not use gas for heating; they may use oil, wood, or electricity instead.  If these accounts use electric heating, they are misclassified.
 
-![Figure 10](/assets/Fig10.png)
+![Figure 10](/assets/Fig10.png)  
+*Figure 10. Comparing new cluster with Electric Rate Code (all displayed are non-heat rate codes)*  
 
 The dual-service accounts (one with both electric and gas meters) with minimal non-responsive gas usage, 3% have both gas and electric heat rates or neither.
 
-![Figure 11](/assets/Fig11.png)
+![Figure 11](/assets/Fig11.png)  
+*Figure 11. Merging gas with electric heat rate code for residential accounts*  
    </div>
 </details>
 
@@ -126,17 +131,20 @@ The dual-service accounts (one with both electric and gas meters) with minimal n
    <div markdown="1">
 We implemented both regression models and time-series forecasts on daily and hourly data.  We investigated using any and all weather information as predictors of gas use in the regression model; however, only prior temperature and change in temperature demonstrated significant relationships with use.  Plotting the relationship between use and temperature indicated a linear relationship, so the regression model is a linear regression predicting use based on prior temperature and temperature change (Figure 12).  The daily regression model uses the prior day’s low temperature and the change from the prior day, while the hourly regression model uses the prior hour’s temperature and the change in temperature from 6 hours ago. 
 
-![Figure 12](/assets/Fig12.png)
+![Figure 12](/assets/Fig12.png)  
+*Figure 12. Relationship between temperature (F) and average use (CCF)*  
 
 The time-series models were developed using an automated SARIMAX (Seasonal, AutoRegressive Integrated Moving Average with eXternal regressor) function that automatically identified the appropriate parameters for the models.  The SARIMAX models use historic use, seasonal trends, and temperature as predictive inputs to forecast use.  
 
 At the daily level the regression models demonstrate good explanation among Responder groups, with an R2 value of approximately 80% across all responder groups.  However, the regression models have low R2 values and high error (RMSE: Root Mean Square Error – lower is better) for non-responder groups (Figure 13).  We attempted to use the SARIMAX models as an alternative forecast method for clusters where regression forecasts do not perform well. Unfortunately, SARIMAX models did not perform any better on these groups, which can be due to (a) insufficient historic data to detect trends/patterns, or (b) that these clusters’ natural gas use is triggered by an external factor that is not presented in the dataset.
 
-![Figure 13](/assets/Fig13.png)
+![Figure 13](/assets/Fig13.png)  
+*Figure 13. Error metrics for daily forecast models*  
 
 We created similar Regression and SARIMAX models for hourly data, which did not perform as well as on daily level. This is to be expected, as there is more variability (and thus, unpredictability) as the granularity of the data increases.  We see the same problem with hourly as we did with daily data - among Responder groups, approximately 60% of the change in use can be predicted using the prior hour’s low (°F) and the temperature change over the past 6 hours. However, the models still do not perform well on clusters that have “huge” usage and other clusters who do not respond to temperature.
 
-![Figure 14](/assets/Fig14.png)
+![Figure 14](/assets/Fig14.png)  
+*Figure 14. Error metrics for hourly forecast models*  
 
 In both daily and hourly forecasts, “huge” users are very challenging to forecast.  Part of this problem is that the average use per meter varies between 150 CCF to >4000 CCF.  This dramatic variance within the “huge” group means contributes to the high error rate.  Additionally, the small number of “huge” meters mean that each meter can have a large influence on the average.  It may be that forecasting each meter individually gives better results, especially for the “huge” meters with a weather response.
 
