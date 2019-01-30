@@ -143,7 +143,7 @@ At the daily level the regression models demonstrate good explanation among Resp
 
 We created similar Regression and SARIMAX models for hourly data, which did not perform as well as on daily level. This is to be expected, as there is more variability (and thus, unpredictability) as the granularity of the data increases.  We see the same problem with hourly as we did with daily data - among Responder groups, approximately 60% of the change in use can be predicted using the prior hour’s low (°F) and the temperature change over the past 6 hours. However, the models still do not perform well on clusters that have “huge” usage and other clusters who do not respond to temperature.
 
-![Figure 14](/assets/Fig14.png){ width=250px }
+![Figure 14](/assets/Fig14.png)
 *Figure 14. Error metrics for hourly forecast models*  
 
 In both daily and hourly forecasts, “huge” users are very challenging to forecast.  Part of this problem is that the average use per meter varies between 150 CCF to >4000 CCF.  This dramatic variance within the “huge” group means contributes to the high error rate.  Additionally, the small number of “huge” meters mean that each meter can have a large influence on the average.  It may be that forecasting each meter individually gives better results, especially for the “huge” meters with a weather response.
