@@ -148,7 +148,8 @@ Based on our analysis, we believe that retroactively adding attributes about mag
 
 83% of the meters in our sample have use that responds to weather, meaning they are viable candidates for weather-based regression forecasts.  These accounts consist primarily of residential and small commercial meters.  However, this 83% of meters accounts for only 54% of total gas sold in 2018 (Figure 15). The relatively few commercial accounts that are non-responsive to weather but have huge/high use account for nearly half of the gas consumption January- September 2018, and these commercial accounts have highly varied usage, which makes forecasting as a cluster challenging as their use is not easily predicted by weather or historic consumption data.
 
-![Figure 15](/assets/Fig15.png "Figure 15. Meter responsiveness and consumption")
+![Figure 15](/assets/Fig15.png)  
+*Figure 15. Meter responsiveness and consumption*  
 
 Regression forecast models using prior temperature and change in temperature on daily level are sufficient to predict usage for weather responders. Among responder groups, the prior day’s lowest temperature and the change from day to day explains approximately 80% of the change in daily use. Hourly forecast based on the prior hour’s low and change in temperature over the past 6 hours have slightly worse performance than the daily model.  Time-series models based on historic use do not perform any better than weather-based models, even on clusters that do not respond to weather.  
 
