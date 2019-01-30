@@ -57,7 +57,7 @@ Broadly speaking, our procedure for analysis and modelling consisted of 4 main s
 3.	Compare forecast accuracy from forecasts based on clusters to accuracy from forecasts based on rate code
 4.	Identify accounts where actual patterns of use do not align with anticipated patterns inferred from rate codes.
 
-![Figure 1](/assets/Fig1.png)
+![Figure 1](/assets/Fig1.png "Figure 1")
    </div>
 </details> 
 
